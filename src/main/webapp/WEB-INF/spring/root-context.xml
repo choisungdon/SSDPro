@@ -2,7 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	<!---->
 	
@@ -10,16 +12,25 @@
 		class="com.zaxxer.hikari.HikariConfig">
 		<property name="poolName" value="springHikariCP" />
 		<property name="connectionTestQuery" value="SELECT 1" />
-		<property name="driverClassName" value="org.mariadb.jdbc.Driver" />
+		<property name="driverClassName" value="org.mariadb.jdbc.Driver" /> 
+		<!-- <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" /> -->
 		<property name="maximumPoolSize" value="10" />
 		<property name="idleTimeout" value="30000" />
 		<property name="jdbcUrl" value="jdbc:mariadb://127.0.0.1:3307/ssdpro?serverTimeZone=UTC&amp;allowMultiQueries=true" />
+		<!--<property name="jdbcUrl" value="jdbc:log4jdbc:mariadb://127.0.0.1:3307/ssdpro?serverTimeZone=UTC&amp;allowMultiQueries=true" ></property> -->
 		<property name="username" value="root" />
 		<property name="password" value="1234" />
 	</bean>
 
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-		<constructor-arg ref="hikariConfig" />
+		<constructor-arg ref="hikariConfig" /> <!--스피링 내부 hikariConfig의 객체의 생성자 실행 시키는 것같다. -->
 	</bean>
+	
+	<bean id="sqlSesstionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="typeAliasesPackage" value="com.project.ssdpro"/>
+	</bean>
+	
+	<mybatis-spring:scan base-package="com.project.ssdpro"/>
 	
 </beans>
