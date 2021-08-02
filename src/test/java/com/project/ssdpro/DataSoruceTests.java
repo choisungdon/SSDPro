@@ -1,6 +1,7 @@
 package com.project.ssdpro;
 
 import static org.junit.Assert.fail;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,7 +20,7 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
 public class DataSoruceTests {
-	@Setter(onMethod_ = @Autowired)
+	@Setter(onMethod_ = {@Autowired})
 	private DataSource dataSource;
 	
 	@Test
